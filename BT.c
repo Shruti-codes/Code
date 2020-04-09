@@ -10,6 +10,7 @@ struct BTNode** createQueue(int *, int *);
 void enqueue(struct BTNode **, int *, struct BTNode *); 
 struct BTNode *dequeue(struct BTNode **, int *); 
 int height_iter(struct BTNode *);
+struct BTNode* FindMin(struct BTNode *);
 #define stack_size 50
 
 struct BTNode
@@ -245,13 +246,13 @@ int main()
 
 	inorder(root);
 
-	//int x;
-	//scanf("%d", &x);
-	//insert(root,x);
-	//inorder(root);
-	//delete(root,6);
-	//printf("\n");
-	//inorder(root);
+	int x;
+	scanf("%d", &x);
+	insert(root,x);
+	inorder(root);
+	delete(root,x);
+	printf("\n");
+	inorder(root);
 	//search(root,45);
 	//printf("\n");
 	//preorder(root);
@@ -260,7 +261,7 @@ int main()
 	//printf("\n");
 	//postorder(root);
 	//deleteTree(root);
-	printf(" \n %d ",height_iter(root));
+	//printf(" \n %d ",height_iter(root));
 	//levelorder(root);
 	//printf("\n");
 	//levelreverse(root);
@@ -282,7 +283,7 @@ struct BTNode* insert(struct BTNode* node, int key)
 	return node;
 }
 
-struct BTNode* delete(struct BTNode *root,int key)		//Error
+struct BTNode* delete(struct BTNode *root,int key)
 {
 	if(root==NULL)
 		return root;
@@ -292,33 +293,41 @@ struct BTNode* delete(struct BTNode *root,int key)		//Error
 		root->right=delete(root->right,key);
 	else
 	{
-	if(root->left == NULL)
-	{
-		struct BTNode *temp = root->right;
-		free(root);
-		return temp;
-	}
-	else if(root->right == NULL)
-	{
-		struct BTNode* temp = root->left;
-		free(root);
-		return temp;
-	}
-		struct BTNode *succ = root->right;
-		struct BTNode *succParent = root->right;
-
-		while(succ->left!=NULL)
+		if(root->left == NULL && root->right == NULL)
 		{
-			succParent = succ;
-			succ = succ->left;
+			free(root);
+			root=NULL;
 		}
 
-		succParent -> left = succ->right;
-		root->data = succ->data;
-		free(succ);
-		
+		else if(root->left == NULL)
+		{
+			struct BTNode *temp = root;
+			root = root->right;
+			free(temp);
+		}
+		else if(root->right == NULL)
+		{
+			struct BTNode *temp = root;
+			root = root->left;
+			free(temp);
+		}
+		else
+		{
+			struct BTNode *temp = FindMin(root->right);
+			root->data = temp->data;
+			root->right = delete(root->right,temp->data);
+		}
    }
    return root;
+}
+
+struct BTNode* FindMin(struct BTNode *root)
+{
+	if(root==NULL)
+		return NULL;
+	while(root->left!=NULL)
+		root = root->left;
+	return root;
 }
 
 void search_rec(struct BTNode* root, int key)
