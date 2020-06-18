@@ -1,3 +1,5 @@
+//O(n log n) , not in-place
+
 #include<stdio.h>
 void  merge(int [], int , int , int );
 void mergesort(int [], int , int );
