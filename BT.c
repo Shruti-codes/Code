@@ -24,7 +24,7 @@ struct BTNode * BTNew(int key)
 {
 	struct BTNode* temp = (struct BTNode*)malloc(sizeof(struct BTNode));
 	temp->data = key;
-	temp -> left = temp->right = NULL;
+	temp->left = temp->right = NULL;
 	return temp;
 };
 
@@ -107,6 +107,7 @@ int levelorder(struct BTNode *root)
 	return m;
 }
 
+//level order traversal bottom up
 void levelreverse(struct BTNode *root)		//error
 {
 	int rear, front;
@@ -116,25 +117,22 @@ void levelreverse(struct BTNode *root)		//error
     struct BTNode *temp = root;
     enqueue(q,&rear,root);
     struct BTNode* curr =NULL ;
-    //printf("00");
-	while(temp)
+    
+	while(!isEmptyQ(q))
 	{
-		temp = dequeue(q,&front);
-		
-		if(temp ->right)
-			enqueue(q,&rear,temp->right);
-		if(temp ->left)
-			enqueue(q,&rear,temp->left);
-		push(s,temp);
-		
+		root = dequeue(q,&front);
+		push(s,root);
+		if(root ->right)
+			enqueue(q,&rear,root->right);
+		if(root ->left)
+			enqueue(q,&rear,root->left);
 	}
 
 	while(isEmpty(s) == 0)
 	{
-		curr = pop(s);
+		root = pop(s);
 		printf("%d ", curr->data );
 	}
-	
 }
 
 void inorder(struct BTNode *root)
@@ -246,13 +244,13 @@ int main()
 
 	inorder(root);
 
-	int x;
-	scanf("%d", &x);
-	insert(root,x);
-	inorder(root);
-	delete(root,x);
-	printf("\n");
-	inorder(root);
+	// int x;
+	// scanf("%d", &x);
+	// insert(root,x);
+	// inorder(root);
+	// delete(root,x);
+	// printf("\n");
+	// inorder(root);
 	//search(root,45);
 	//printf("\n");
 	//preorder(root);
@@ -267,6 +265,7 @@ int main()
 	//levelreverse(root);
 	//printf("\n %d \n",maxim_recur(root));
 	//printf("%d \n", size(root) );
+	printf("\n %d \n", widthOfBinaryTree(root));
 }
 
 struct BTNode* insert(struct BTNode* node, int key)
@@ -448,7 +447,36 @@ int height_iter(struct BTNode *root)
 	return h;
 }
 
-struct BTNode* deep(struct BTNode *root)
+void preorderIter(struct BTNode* root, int* count, int l)
 {
-
+    if(root) 
+    {
+        count[l]++;
+        preorderIter(root->left, count, l+1);
+        preorderIter(root->right, count, l+1);
+    }
 }
+
+int widthOfBinaryTree(struct BTNode* root)
+{
+     if(root==NULL)
+        return 0;
+    
+    int n = height(root);
+    int count[n];
+    
+    for(int i=0; i<n; i++)
+        count[i] = 0;
+    
+    preorderIter(root, count, 0);
+    
+    int max = -1;
+    for (int i = 0; i < n; ++i)
+    {
+        if (max < count[i])
+            max = count[i];
+    }
+   
+    return max;
+}
+
