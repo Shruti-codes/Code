@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
+#include<stdbool.h>
 
 struct BTNode* insert(struct BTNode * , int );
 void inorder(struct BTNode * );
@@ -11,6 +12,7 @@ void enqueue(struct BTNode **, int *, struct BTNode *);
 struct BTNode *dequeue(struct BTNode **, int *); 
 int height_iter(struct BTNode *);
 struct BTNode* FindMin(struct BTNode *);
+bool isSameTree(struct BTNode*, struct BTNode*);
 #define stack_size 50
 
 struct BTNode
@@ -45,7 +47,10 @@ void push(struct stack *s,struct BTNode *key)
 struct BTNode* pop(struct stack *s)
 {
 	if(s->top == -1)
+	{
 		printf("Underflow\n");
+		return NULL;
+	}
 	else
 		return s->items[(s->top)--];
 }
@@ -118,7 +123,7 @@ void levelreverse(struct BTNode *root)		//error
     enqueue(q,&rear,root);
     struct BTNode* curr =NULL ;
     
-	while(!isEmptyQ(q))
+	while(!isEmptyQ(*q))
 	{
 		root = dequeue(q,&front);
 		push(s,root);
@@ -242,6 +247,12 @@ int main()
 	root->right= BTNew(70);
 	root->right->left = BTNew(60);
 
+	struct BTNode *p = BTNew(1);
+	p->left = BTNew(2);
+
+	struct BTNode *q = BTNew(1);
+	q->right = BTNew(2);	
+
 	inorder(root);
 
 	// int x;
@@ -265,7 +276,8 @@ int main()
 	//levelreverse(root);
 	//printf("\n %d \n",maxim_recur(root));
 	//printf("%d \n", size(root) );
-	printf("\n %d \n", widthOfBinaryTree(root));
+	//printf("\n %d \n", widthOfBinaryTree(root));
+	printf("\n%d \n", isSameTree(p,q));
 }
 
 struct BTNode* insert(struct BTNode* node, int key)
@@ -398,6 +410,7 @@ int deleteTree(struct BTNode *root)
 	deleteTree(root->left);
 	deleteTree(root->right);
 	free(root);
+	return 1;
 }
 
 int height(struct BTNode *root)
@@ -426,12 +439,12 @@ int height_iter(struct BTNode *root)
 	enqueue(q,&rear,NULL);
 	if(root == NULL)
 		return 0;
-	while(!isEmptyQ(q))
+	while(!isEmptyQ(*q))
 	{
 		temp = dequeue(q,&front);
 		if(temp == NULL)
 		{
-			if(!isEmptyQ(q))
+			if(!isEmptyQ(*q))
 				enqueue(q,&rear,NULL);
 			h++;
 		}
@@ -478,5 +491,19 @@ int widthOfBinaryTree(struct BTNode* root)
     }
    
     return max;
+}
+
+bool isSameTree(struct BTNode* p, struct BTNode* q)
+{
+	if(p==NULL && q==NULL)
+        return true;
+    else if(p!=NULL && q!=NULL)
+    {
+	    return ((p->data == q->data) &&
+	    		isSameTree(p->left, q->left) &&
+	    		isSameTree(p->right, q->right));
+	
+	}
+    return false;
 }
 
