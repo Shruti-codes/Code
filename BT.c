@@ -112,6 +112,36 @@ int levelorder(struct BTNode *root)
 	return m;
 }
 
+void zigzag(struct BTNode *root)
+{
+	int rear, front;
+	struct BTNode **q = createQueue(&front, &rear); 
+    struct BTNode *temp = root;
+    int sig=1;
+	while(temp)
+	{
+		if(sig==-1)
+		{
+			printf("%d ", temp->data);	
+		    if(temp ->left)
+					enqueue(q,&rear,temp->left);
+			if(temp ->right)
+					enqueue(q,&rear,temp->right);
+			temp = dequeue(q,&front);
+		}
+		else
+		{
+			printf("%d ", temp->data);	
+			if(temp ->right)
+				enqueue(q,&rear,temp->right);
+			if(temp ->left)
+				enqueue(q,&rear,temp->left);
+			temp = dequeue(q,&front);
+		}
+		sig = sig*-1;
+	}		
+}
+
 //level order traversal bottom up
 void levelreverse(struct BTNode *root)		//error
 {
@@ -240,12 +270,12 @@ int maxim_recur(struct BTNode *root)
 
 int main()
 {
-	struct BTNode *root = BTNew(50);
-	root->left = BTNew(30);
-	root->left->left = BTNew(20);
-	root->left->right = BTNew(40);
-	root->right= BTNew(70);
-	root->right->left = BTNew(60);
+	struct BTNode *root = BTNew(3);
+	root->left = BTNew(9);
+	//root->left->left = BTNew(20);
+	root->right= BTNew(20);
+	root->right->left = BTNew(15);
+	root->right->right = BTNew(7);
 
 	struct BTNode *p = BTNew(1);
 	p->left = BTNew(2);
@@ -253,7 +283,7 @@ int main()
 	struct BTNode *q = BTNew(1);
 	q->right = BTNew(2);	
 
-	inorder(root);
+	//inorder(root);
 
 	// int x;
 	// scanf("%d", &x);
@@ -277,7 +307,8 @@ int main()
 	//printf("\n %d \n",maxim_recur(root));
 	//printf("%d \n", size(root) );
 	//printf("\n %d \n", widthOfBinaryTree(root));
-	printf("\n%d \n", isSameTree(p,q));
+	//printf("\n%d \n", isSameTree(p,q));
+	zigzag(root);
 }
 
 struct BTNode* insert(struct BTNode* node, int key)
