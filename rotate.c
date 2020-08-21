@@ -1,3 +1,5 @@
+//rotate array in counter-clockwise direction
+
 #include<stdio.h>
 
 int main()
