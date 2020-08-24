@@ -308,7 +308,8 @@ int main()
 	//printf("%d \n", size(root) );
 	//printf("\n %d \n", widthOfBinaryTree(root));
 	//printf("\n%d \n", isSameTree(p,q));
-	zigzag(root);
+	//zigzag(root);
+	printf("%d", sumOfLeftLeaves(root));
 }
 
 struct BTNode* insert(struct BTNode* node, int key)
@@ -538,3 +539,16 @@ bool isSameTree(struct BTNode* p, struct BTNode* q)
     return false;
 }
 
+int sumOfLeftLeaves(struct BTNode* root) 
+    {
+        int sum = 0;
+        
+        if(!root)
+            return 0;
+        
+        if(root->left && root->left->left == NULL && root->left->right == NULL)
+            sum += root->left->data;
+        
+        sum += (sumOfLeftLeaves(root->left) + sumOfLeftLeaves(root->right));
+        return sum;
+    }
